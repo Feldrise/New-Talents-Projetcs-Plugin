@@ -6,15 +6,26 @@ class WidgetProjectForm {
     // Init the plugin
     public static function init() {
         // We add all channels 
-        self::$channels['agroalimentaire'] = new NtfChannel('agroalimentaire', 'Agroalimentaire', Webhooks::AGROALIMENTAIRE);
-        self::$channels['etudes_et_conseils'] = new NtfChannel('etudes_et_conseils', 'Etudes et Conseils', Webhooks::ETUDES_ET_CONSEILS);
+        self::$channels['agroalimentaire'] = new NtfChannel('agroalimentaire', 'Agroalimentaire', NtfWpCategories::AGROALIMENTAIRE, NtfWebhooks::AGROALIMENTAIRE);
+        self::$channels['etudes_et_conseils'] = new NtfChannel('etudes_et_conseils', 'Etudes et Conseils', NtfWpCategories::ETUDES_ET_CONSEILS, NtfWebhooks::ETUDES_ET_CONSEILS);
     }
 
     // This defines what to do when the form is submited
     public static function project_submit() {
         if(isset($_POST['project-send'])) {
+            // We create the post object from the info
+            $project = new NtfProject(
+                $_POST['project_name'],                                        // The project name
+                self::$channels[$_POST['project_category']]->category_id,      // The project category id on New Talents site
+                self::$channels[$_POST['project_category']]->webhook,          // The project category webhook on Discord
+                $_POST['project_description']                                  // The project description
+            );
+
+            // We add the post on the site
+            self::submit_wordpress_post($project);
+
             // We send the embed to Discord
-            self::send_discord_message($_POST['project_description']);
+            self::send_discord_message($project);
         }
     }
 
@@ -43,18 +54,20 @@ class WidgetProjectForm {
 <?php
     }
 
-    public static function send_discord_message($message) {
-        $url = self::$channels[$_POST['project_category']]->webhook;
-        $hookObject = json_encode([
-            // The general "message" shown above your embeds
-            "content" => $message,
-            // The username shown in the message
-            "username" => "Projet",
-            // The image location for the senders image
-            "avatar_url" => "https://new-talents.fr/wp-content/uploads/2019/07/mini.png",
-            // Whether or not to read the message in Text-to-speech
-            "tts" => false,
-        ], JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE );
+    // We add the post on the site
+    public static function submit_wordpress_post($project) {
+        $new_post_id = wp_insert_post($project->to_wp_post(), true);
+
+		if (is_wp_error($new_post_id)) {
+            // throw new Exception($new_post_id->get_error_message(), 1);
+            echo ($new_post_id->get_error_message());
+        }
+    }
+
+    // We show the project in the corresponding channel on the Discord server
+    public static function send_discord_message($project) {
+        $url = $project->webhook;
+        $hookObject = $project->to_discord_post();
 
         $ch = curl_init();
 

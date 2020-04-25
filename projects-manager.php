@@ -8,9 +8,13 @@ Author: Feldrise
 Author URI: https://feldrise.com
 */
 
-// We include simple class files
+// We include constants
 include( plugin_dir_path( __FILE__ ) . 'webhooks.php');
+include( plugin_dir_path( __FILE__ ) . 'wp_categories.php');
+
+// We include simple class files
 include( plugin_dir_path( __FILE__ ) . 'class.channel.php');
+include( plugin_dir_path( __FILE__ ) . 'class.project.php');
 
 // We include widgets
 include( plugin_dir_path( __FILE__ ) . 'class.widgets.project-form.php');
