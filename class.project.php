@@ -39,7 +39,7 @@ class NtfProject {
         $this->logoUrl = (isset($form_data['project_logo']) && !empty($form_data['project_logo'])) ? $form_data['project_logo'] : "https://new-talents.fr/wp-content/uploads/2019/07/mini.png";
         $this->bannerUrl = (isset($form_data['project_banner']) && !empty($form_data['project_banner'])) ? $form_data['project_banner'] : "";
 
-        $this->launchDate = date('Y-m-d', strtotime($form_data['project_launch_date']));
+        $this->launchDate = strtotime($form_data['project_launch_date']);
         $this->description = $form_data['project_description'];
         $this->novelty = $form_data['project_novelty'];
         $this->team = $form_data['project_team'];

@@ -36,7 +36,7 @@ class WidgetProjectForm {
         // We may show a status message
         if (!empty(self::$statusMessage)) {
 ?>
-    <p style="background-color: #F0F0F0; border-left: 3px solid #d8601b; padding: 8px">
+    <p style="background-color: #F0F0F0; border-left: 3px solid #d81b60; padding: 8px">
         <?php echo(self::$statusMessage); ?>
     </p>
 <?php
