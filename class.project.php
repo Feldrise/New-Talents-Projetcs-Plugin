@@ -4,10 +4,12 @@ class NtfProject {
     public $id = ''; // This id correspond to the post id
 
     public $title = '';
-    public $logoUrl = '';
     public $author = '';
     public $category = '';
     public $webhook = '';
+
+    public $logoUrl = '';
+    public $bannerUrl = '';
 
     public $launchDate = '';
     public $description = '';
@@ -30,10 +32,12 @@ class NtfProject {
     // the widget
     public function construct_from_form($form_data, $category, $webhook) {
         $this->title = $form_data['project_name'];
-        $this->logoUrl = (isset($form_data['project_logo']) && !empty($form_data['project_logo'])) ? $form_data['project_logo'] : "https://new-talents.fr/wp-content/uploads/2019/07/mini.png";
         $this->author = $form_data['project_author'];
         $this->category = $category; // Can't be deduced from form post
         $this->webhook = $webhook; // Can't be deduced from form post
+
+        $this->logoUrl = (isset($form_data['project_logo']) && !empty($form_data['project_logo'])) ? $form_data['project_logo'] : "https://new-talents.fr/wp-content/uploads/2019/07/mini.png";
+        $this->bannerUrl = (isset($form_data['project_banner']) && !empty($form_data['project_banner'])) ? $form_data['project_banner'] : "";
 
         $this->launchDate = date('Y-m-d', strtotime($form_data['project_launch_date']));
         $this->description = $form_data['project_description'];
@@ -46,11 +50,24 @@ class NtfProject {
 
     // This function create an array which represent a post for Wordpress
     public function to_wp_post() {
-        // TODO: modify the content to be more than just the description
+        // This one show if the project is recruting etc.
+        $finalCitation = (($this->isLucratif) ? 'Ce projet est lucratif' : "Ce projet n'est pas lucratif") . " et " . (($this->isSearchingPeople) ? 'recherche de nouveaux profils' : 'ne recherche pas de nouveaux profils');
+
+        // This is the content of the WP post
+        $content =  "<h2>$this->title</h2>";
+        $content .= "<p>Un projet par $this->author, lancement le " . date('d/m/Y', $this->launchDate) . ".";
+        $content .= "<h3>Description du projet</h3>";
+        $content .= "<p>$this->description</p>";
+        $content .= "<h3>L'originalité du projet</h3>";
+        $content .= "<p>$this->novelty</p>";
+        $content .= "<h3>L'équipe du projet</h3>";
+        $content .= "<p>$this->team</p>";
+        $content .= "<blockquote class=\"wp-block-quote\"><p>$finalCitation</p></blockquote>";
+
         return array(
 			'post_title'     => $this->title,
 			'post_category'  => array($this->category),
-			'post_content'   => wp_kses_post($this->description), // For now we only show the description... 
+			'post_content'   => wp_kses_post($content), // For now we only show the description... 
             'comment_status' => get_option('default_comment_status'),
             'post_status'    => 'publish'
 		);
