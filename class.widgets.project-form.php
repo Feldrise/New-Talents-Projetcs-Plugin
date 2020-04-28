@@ -3,7 +3,7 @@
 class WidgetProjectForm {
     public static $channels = array(); // We store channels in an array
 
-    public $statusMessage = ''; // We can show the current statue of the form
+    public static $statusMessage = ''; // We can show the current statue of the form
 
     // Init the plugin
     public static function init() {
@@ -33,6 +33,14 @@ class WidgetProjectForm {
 
     // This is the form for the project submition.
     public static function project_form() {
+        // We may show a status message
+        if (!empty(self::$statusMessage)) {
+?>
+    <p style="background-color: #F0F0F0; border-left: 3px solid #d8601b; padding: 8px">
+        <?php echo(self::$statusMessage); ?>
+    </p>
+<?php
+        }
 ?>
 <form class="project-submition-form" method="post" action="#">
     <p class="project-submition-form-select">
@@ -42,6 +50,8 @@ class WidgetProjectForm {
         // We show each channels on the select
         foreach (self::$channels as $key => $channel) {
             echo("<option value=\"$key\">$channel->name</option>");
+            self::$statusMessage = "";
+            $_POST = array();
         }
 ?>
         </select>
@@ -145,6 +155,10 @@ class WidgetProjectForm {
         
         $project->id = $new_post_id;
         self::set_post_featured_image($project);
+
+        // We clean the post to ensure the project is not submited twice
+        self::$statusMessage = "Votre projet à bien été publié !";
+        $_POST = array();
     }
 
     // We show the project in the corresponding channel on the Discord server

@@ -56,6 +56,9 @@ class NtfProject {
         // This is the content of the WP post
         $content =  "<h2>$this->title</h2>";
         $content .= "<p>Un projet par $this->author, lancement le " . date('d/m/Y', $this->launchDate) . ".";
+        if (isset($this->bannerUrl) && !empty($this->bannerUrl)) {
+            $content .= "<figure class=\"wp-block-image size-large\"><img src=\"$this->bannerUrl\" alt=\"Bannière du projet\"/><figcaption>Bannière du projet</figcaption></figure>";
+        }
         $content .= "<h3>Description du projet</h3>";
         $content .= "<p>$this->description</p>";
         $content .= "<h3>L'originalité du projet</h3>";
@@ -79,7 +82,7 @@ class NtfProject {
             // The general "message" shown above your embeds
             "content" => "",
             // The username shown in the message
-            "username" => "Projet",
+            "username" => "Projet [$this->title]",
             // The image location for the senders image
             "avatar_url" => $this->logoUrl,
             // Whether or not to read the message in Text-to-speech
@@ -108,7 +111,11 @@ class NtfProject {
                 ],
                 [
                     "description" => (($this->isLucratif) ? 'Ce projet est lucratif' : "Ce projet n'est pas lucratif") . " et " . (($this->isSearchingPeople) ? 'recherche de nouveaux profils' : 'ne recherche pas de nouveaux profils'),
-                    "color" => hexdec( "f5ff00" )
+                    "color" => hexdec( "f5ff00" ),
+                    // Image object
+                    "image" => [
+                        "url" => $this->bannerUrl
+                    ]
                 ]
             ]
         ], JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE );
