@@ -4,6 +4,7 @@ class NtfProject {
     public $id = ''; // This id correspond to the post id
 
     public $title = '';
+    public $logoUrl = '';
     public $author = '';
     public $category = '';
     public $webhook = '';
@@ -29,6 +30,7 @@ class NtfProject {
     // the widget
     public function construct_from_form($form_data, $category, $webhook) {
         $this->title = $form_data['project_name'];
+        $this->logoUrl = (isset($form_data['project_logo']) && !empty($form_data['project_logo'])) ? $form_data['project_logo'] : "https://new-talents.fr/wp-content/uploads/2019/07/mini.png";
         $this->author = $form_data['project_author'];
         $this->category = $category; // Can't be deduced from form post
         $this->webhook = $webhook; // Can't be deduced from form post
@@ -62,7 +64,7 @@ class NtfProject {
             // The username shown in the message
             "username" => "Projet",
             // The image location for the senders image
-            "avatar_url" => "https://new-talents.fr/wp-content/uploads/2019/07/mini.png",
+            "avatar_url" => $this->logoUrl,
             // Whether or not to read the message in Text-to-speech
             "tts" => false,
             // The embeds

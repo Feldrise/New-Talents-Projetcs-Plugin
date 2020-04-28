@@ -47,15 +47,30 @@ class WidgetProjectForm {
         </select>
     </p>
     <p>
-        <label>Nom du projet : </label><input type="text" id="project_name" name="project_name" placeholder="Nom du projet" required/>
+        <label>Nom du projet : </label><input class="project-form-field" type="text" id="project_name" name="project_name" placeholder="Nom du projet" required/>
+    </p>
+    <p>
         <label>Nom de l'auteur : </label><input type="text" id="project_author" name="project_author" placeholder="Nom de l'auteur" required/>
+    </p>
+    <p>
+        <label>Url du logo (optionnel)</label><input type="text" id="project_logo" name="project_logo" placeholder="Logo du projet (optionnel)" />
+    </p>
+    <p>
         <label>Date de lancement : </label><input type="date" id="project_launch_date" name="project_launch_date" value="<?php echo date('Y-m-d'); ?>" required/><br/>
+    </p>
+    <p>
         <label>Description du projet : </label><textarea id="project_description" name="project_description" placeholder="Description du projet" row="4" required></textarea>
+    </p>
+    <p>
         <label>Qu'est-ce que votre projet apporte de nouveau ? : </label><textarea id="project_novelty" name="project_novelty" placeholder="Qu'est-ce que votre projet apporte de nouveau ?" row="4" required></textarea>
+    </p>
+    <p>
         <label>Constitution de l'équipe : </label><input type="text" id="project_team" name="project_team" placeholder="Constitution de l'équipe" required/>
     </p>
     <p>
         <label for="project_is_lucratif">Le projet est à but lucratif </label><input type="checkbox" id="project_is_lucratif" name="project_is_lucratif" /><br/>
+    </p>
+    <p>
         <label for="project_is_searching_people">Le projet cherche de nouveaux profils </label><input type="checkbox" id="project_is_searching_people" name="project_is_searching_people" />
     </p>
     <p class="project-submition-form-submit">
